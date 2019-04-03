@@ -1,0 +1,41 @@
+{
+    "name": "phpreboot/demo-package",
+    "description": "demo package for php reboot meetup",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "rameshdahiya",
+            "email": "r.dahiya@easternenterprise.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.2",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "require-dev": {
+        "orchestra/testbench": "3.8.x-dev"
+    },
+    "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "MovieDB\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": { "MovieDB\\Tests\\": "tests/" }
+  },
+
+  "extra": {
+      "laravel": {
+        "providers" :[
+          "MovieDB\\MovieDBServiceProvider"
+        ],
+        "aliases": {
+          "MovieDB": "MovieDB\\Facades\\MovieDB"
+        }
+      }
+    }
+
+}
