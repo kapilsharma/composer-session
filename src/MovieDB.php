@@ -1,16 +1,13 @@
 <?php
 namespace MovieDB;
 
+use MovieDB\DataModels\Movie;
+
 Class MovieDB
 {
-    public function __construct()
+    public function movies()
     {
-       // dd('inside constructor');
-    }
-
-    public function trends()
-    {
-        dd('inside trends');
+        return new Movie();
     }
 
 }

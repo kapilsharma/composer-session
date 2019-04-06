@@ -1,6 +1,13 @@
+* Standards
+https://github.com/php-pds/skeleton/tree/1.0.0
+Your package shouldn't have any bussiness logic
+
+Use traits , where you want your packge code to be consumed by project using ur package
+ 
+
 * Keywords - Use An array of keywords that the package is related to. These can be used for searching and filtering.
 Eg:
-```
+```php
 "keywords": [
         "spatie",
         "backup",
@@ -107,6 +114,243 @@ e.g:
         }
     }
 ```
+* Reference a local package to your project
+
+composer config repositories.local '{"type": "path", "url": "../example-pkg"}' --file composer.json
+
+```
+"repositories": [
+    {
+        "type": "path",
+        "url": "../path-to-your-package",
+        "options": {
+            "symlink": true
+        }
+    }
+]
+```
+* Reference a private package to your project
+composer config repositories.remote '{"type": "git", "url": "<git repo url>"}' --file composer.json
+
+* Interfaces 
+    - What is an interface ?
+    - Why we need interface ?  
+
+### Example explaining interface 
+```php
+<?php
+class LogToDatabase 
+{
+    public function execute($message)
+    {
+        var_dump('log the message to a database :'.$message);
+    }
+}
+class LogToFile 
+{
+    public function execute($message)
+    {
+        var_dump('log the message to a file :'.$message);
+    }
+}
+class UsersController 
+{ 
+    protected $logger;
+    
+    public function __construct(LogToFile $logger)
+    {
+        $this->logger = $logger;
+    }
+    
+    public function show()
+    { 
+        $user = 'PHPReboot';
+        $this->logger->execute($user);
+    }
+}
+$controller = new UsersController(new LogToFile);
+$controller->show();
+```
+Now same code using interface
+
+```php
+<?php
+interface Logger 
+{
+    public function execute($message);
+}
+
+class LogToDatabase implements Logger 
+{
+    public function execute($message){
+        var_dump('log the message to a database :'.$message);
+    }
+}
+class LogToFile implements Logger 
+{
+    public function execute($message) 
+    {
+        var_dump('log the message to a file :'.$message);
+    }
+}
+class UsersController 
+{
+    protected $logger;
+    
+    public function __construct(Logger $logger) 
+    {
+        $this->logger = $logger;
+    }
+    
+    public function show() 
+    {
+        $user = 'PHPReboot';
+        $this->logger->execute($user);
+    }
+}
+$controller = new UsersController(new LogToDatabase);
+$controller->show();
+```
+
+Example of using abstarct class
+```php
+<?php
+class Tea 
+{
+    public function addTea()
+    {
+        var_dump('Add proper amount of tea');
+        return $this;
+    }
+    protected  function  addHotWater()
+    {
+        var_dump('Pour Hot water into cup');
+        return $this;
+    }
+    
+    protected  function addSugar()
+    {
+        var_dump('Add proper amount of sugar');
+        return $this;
+    }
+    
+    protected function addMilk()
+    {
+        var_dump('Add proper amount of Milk');
+        return $this;
+    }
+    public function make()
+    {
+        return $this
+            ->addHotWater()
+            ->addSugar()
+            ->addTea()
+            ->addMilk();
+    }
+}
+$tea = new Tea();
+$tea->make();
+
+class Coffee 
+{
+    protected function addCoffee()
+    {
+        var_dump('Add proper amount of tea');
+        return $this;
+    }
+    protected  function  addHotWater()
+    {
+        var_dump('Pour Hot water into cup');
+        return $this;
+    }
+    
+    protected  function addSugar()
+    {
+        var_dump('Add proper amount of sugar');
+        return $this;
+    }
+    
+    protected function addMilk()
+    {
+        var_dump('Add proper amount of Milk');
+        return $this;
+    }
+    public function make()
+    {
+        return $this
+            ->addHotWater()
+            ->addSugar()
+            ->addCoffee()
+            ->addMilk();
+    }
+}
+$coffee = new Coffee();
+$coffee->make();
+```
+
+with abstraction 
+```php
+<?
+abstract class Drink
+{
+    public function make()
+    {
+        return $this
+            ->addHotWater()
+            ->addSugar()
+            ->addPrimaryToppings()
+            ->addMilk();
+    }
+    
+    protected  function  addHotWater()
+    {
+        var_dump('Pour Hot water into cup');
+        return $this;
+    }
+    
+    protected  function addSugar()
+    {
+        var_dump('Add proper amount of sugar');
+        return $this;
+    }
+    
+    protected function addMilk()
+    {
+        var_dump('Add proper amount of Milk');
+        return $this;
+    }
+    
+    protected abstract function AddPrimaryIngredients();
+}
+class Tea extends Drink
+{
+    public function AddPrimaryIngredients()
+    {
+        var_dump('Add proper amount of tea');
+        return $this;
+    }
+}
+
+class Coffee extends Drink
+{
+    public function AddPrimaryIngredients()
+    {
+        var_dump('Add proper amount of Coffee');
+        return $this;
+    }
+}
+
+$tea = new Tea();
+$tea->make();
+
+$coffee = new Coffee();
+$coffee->make();
+```
+
+
+
+
+
 
 * API Key (v3): 1c71e3d9c23bd528479c8c7bee7bb57e
 * API read access token (V4): eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYzcxZTNkOWMyM2JkNTI4NDc5YzhjN2JlZTdiYjU3ZSIsInN1YiI6IjVjYTQ3MTgyOTI1MTQxMmRmZjFkZGYxMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Arho5Mu6-CehUX8mJThOUVxZvmp6x7_jjXQ-BjyB-FQ
@@ -132,5 +376,26 @@ https://api.themoviedb.org/3/trending/{all}/{day}
 - test - for handling all my package test code
 
 
+* catchy questions
+- whats ... stands in php or splat operator
+```
+function concatenate($transform, ...$strings) {
+        $string = '';
+        foreach($strings as $piece) {
+            $string .= $piece;
+        }
+        return($transform($string));
+    }
 
+    echo concatenate("strtoupper", "I'd ", "like ",
+        4 + 2, " apples");
+        
+ //argument unpacking        
+ $email[] = "Hi there";
+     $email[] = "Thanks for registering, hope you like it";
+ 
+     mail("someone@example.com", ...$email);
+     
+```
+* define visibility of your constant. 
 * Need to prepare difference between PSR-4 and PSR-0 auto-loading
